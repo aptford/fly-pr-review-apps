@@ -57,6 +57,7 @@ if ! flyctl status --app "$app"; then
   cp "$config.bak" "$config"
 fi
 
+echo "::add-mask::$INPUT_SECRETS"
 if [ -n "$INPUT_SECRETS" ]; then
   flyctl_command="flyctl secrets set -a $app"
   while IFS= read -r secret; do

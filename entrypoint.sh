@@ -51,9 +51,14 @@ fi
 
 if [ -n "$INPUT_SECRETS" ]; then
   flyctl_command="flyctl secrets set -a $app"
+  secrets=$INPUT_SECRETS
+  if [ -n "$INPUT_SECRETS_KEY" ]; then
+    secrets=$(echo "$secrets" | openssl aes-256-cbc -d -base64 -A -pass pass:"$INPUT_SECRETS_KEY" -pbkdf2)
+  fi
+
   while IFS= read -r secret; do
     flyctl_command+=" $secret"
-  done <<<"$INPUT_SECRETS"
+  done <<<"$secrets"
   eval "$flyctl_command" # Execute the constructed command
 fi
 

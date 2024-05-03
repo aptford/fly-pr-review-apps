@@ -58,7 +58,12 @@ if ! flyctl status --app "$app"; then
 fi
 
 if [ -n "$INPUT_SECRETS" ]; then
-  echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
+  flyctl_command="flyctl secrets set -a $app"
+  # Loop through each secretKey and secretValue pair
+  while IFS= read -r secret; do
+    flyctl_command+=" $secret"
+  done <<<"$secrets"
+  eval "$flyctl_command" # Execute the constructed command
 fi
 
 # Attach postgres cluster to the app if specified.

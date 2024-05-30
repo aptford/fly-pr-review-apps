@@ -33,7 +33,7 @@ fi
 
 # PR was closed - remove the Fly app if one exists and exit.
 if [ "$EVENT_TYPE" = "closed" ]; then
-  flyctl apps destroy "$app" -y || true
+  flyctl apps destroy "$app" -y 
 
   message="Review app deleted."
   echo "message=$message" >>$GITHUB_OUTPUT
